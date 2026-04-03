@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ms365": {
+      "command": "/bin/bash",
+      "args": ["./run.sh"]
+    }
+  }
+}
