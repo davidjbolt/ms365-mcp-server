@@ -12,20 +12,18 @@ Powered by [@softeria/ms-365-mcp-server](https://github.com/Softeria/ms-365-mcp-
    cd ~/ms365-mcp-server
    ```
 
-2. Register an Azure app and add your credentials to `.env` — see [setup-instructions.md](setup-instructions.md)
-
-3. Run the setup script:
+2. Run the setup script:
    ```bash
    ./setup.sh
    ```
-   This checks prerequisites, verifies your credentials, and walks you through Microsoft login.
+   This checks prerequisites and walks you through Microsoft login (device code flow — no Azure app registration required).
 
-4. Launch Claude Code:
+3. Launch Claude Code:
    ```bash
-   claude
+   cd ~/ms365-mcp-server && claude
    ```
 
-5. Approve the MCP server when prompted — done.
+4. Approve the MCP server when prompted — done.
 
 ## What You Can Do
 
@@ -59,4 +57,4 @@ Replace `YOUR_USERNAME` with your macOS username. Restart Claude Desktop after s
 |---------|-----|
 | Auth errors / token expired | Re-run `./setup.sh` |
 | MCP server not connecting | Run `claude` from inside this repo directory |
-| Permission errors in Azure | See [setup-instructions.md](setup-instructions.md) Step 2 |
+| Tenant blocks the default app | See [setup-instructions.md](setup-instructions.md) for custom Azure app option |

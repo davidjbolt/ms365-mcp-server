@@ -67,49 +67,6 @@ chmod +x "$DIR/run.sh"
 check_pass "run.sh is executable"
 echo ""
 
-# --- .env setup ---
-echo "Checking Azure credentials..."
-echo ""
-
-if [ ! -f "$DIR/.env" ]; then
-    cp "$DIR/.env.example" "$DIR/.env"
-    check_warn ".env created from template — you need to add your Azure credentials"
-    echo ""
-    echo "    Open .env and fill in:"
-    echo "      MS365_MCP_CLIENT_ID   — from your Azure app registration"
-    echo "      MS365_MCP_TENANT_ID   — your Azure tenant ID"
-    echo ""
-    echo "    See setup-instructions.md for step-by-step Azure setup."
-    echo ""
-    exit 0
-fi
-
-source "$DIR/.env"
-
-if [ -z "$MS365_MCP_CLIENT_ID" ] || [ "$MS365_MCP_CLIENT_ID" = "your-azure-app-client-id-here" ]; then
-    check_fail "MS365_MCP_CLIENT_ID not set in .env"
-    echo ""
-    echo "    See setup-instructions.md for Azure app registration steps."
-    MISSING=1
-else
-    check_pass "MS365_MCP_CLIENT_ID is set"
-fi
-
-if [ -z "$MS365_MCP_TENANT_ID" ] || [ "$MS365_MCP_TENANT_ID" = "your-azure-tenant-id-here" ]; then
-    check_fail "MS365_MCP_TENANT_ID not set in .env"
-    MISSING=1
-else
-    check_pass "MS365_MCP_TENANT_ID is set"
-fi
-
-echo ""
-
-if [ "$MISSING" -eq 1 ]; then
-    echo -e "${RED}Credentials missing. Update .env and re-run this script.${NC}"
-    echo ""
-    exit 1
-fi
-
 # --- Token cache directory ---
 mkdir -p "$HOME/.config/ms365-mcp"
 check_pass "Token cache directory ready (~/.config/ms365-mcp/)"
@@ -132,8 +89,6 @@ else
     echo ""
     read -p "    Press Enter to start the login process..."
     echo ""
-    MS365_MCP_CLIENT_ID="$MS365_MCP_CLIENT_ID" \
-    MS365_MCP_TENANT_ID="$MS365_MCP_TENANT_ID" \
     MS365_MCP_TOKEN_CACHE_PATH="$CACHE_PATH" \
         npx -y @softeria/ms-365-mcp-server --login
 
@@ -144,8 +99,8 @@ else
         echo ""
         check_fail "Authentication failed — token cache not found after login"
         echo ""
-        echo "    Try running manually:"
-        echo "      MS365_MCP_CLIENT_ID=\$MS365_MCP_CLIENT_ID MS365_MCP_TENANT_ID=\$MS365_MCP_TENANT_ID npx @softeria/ms-365-mcp-server --login"
+        echo "    If your Delinea tenant blocks the default app, you may need a"
+        echo "    custom Azure app registration. See setup-instructions.md."
         exit 1
     fi
 fi
